@@ -23,23 +23,40 @@ public class WorldPanel extends JPanel implements MouseListener, ActionListener 
 		this.cellsPerRow = cpr;
 	
 		//calculate the cellSize
-	
+		cellSize = ConwaysGameOfLife.HEIGHT/ConwaysGameOfLife.CELLS_PER_ROW;
 		
 		//initialize the cells array
-		
-		
+		cells = new Cell[ConwaysGameOfLife.CELLS_PER_ROW][ConwaysGameOfLife.CELLS_PER_ROW];
 		//initialize each cell in the array
-		
+		for(int i = 0; i < ConwaysGameOfLife.CELLS_PER_ROW; i++) {
+			for(int j = 0; j < ConwaysGameOfLife.CELLS_PER_ROW; j++) {
+				cells[i][j] = new Cell(i*cellSize,j*cellSize,cellSize);
+			}
+		}
 	}
 	
 	public void randomizeCells() {
 		// make each cell alive or dead randomly
 		repaint();
+		for(int i = 0; i < ConwaysGameOfLife.CELLS_PER_ROW; i++) {
+			for(int j = 0; j < ConwaysGameOfLife.CELLS_PER_ROW; j++) {
+				if((Math.random()*100)%2 == 0) {
+					cells[i][j].isAlive = true;
+				}
+			}
+		}
 	}
 	
 	public void clearCells() {
 		// set isAlive to false for all cells
 		repaint();
+		for(int i = 0; i < ConwaysGameOfLife.CELLS_PER_ROW; i++) {
+			for(int j = 0; j < ConwaysGameOfLife.CELLS_PER_ROW; j++) {
+				
+					cells[i][j].isAlive = true;
+				
+			}
+		}
 	}
 	
 	public void startAnimation() {
@@ -57,15 +74,24 @@ public class WorldPanel extends JPanel implements MouseListener, ActionListener 
 	@Override
 	public void paintComponent(Graphics g) {
 		//iterate through the cells and draw them
+		for(int i = 0; i < ConwaysGameOfLife.CELLS_PER_ROW; i++) {
+			for(int j = 0; j < ConwaysGameOfLife.CELLS_PER_ROW; j++) {
+				cells[i][j].draw(g);
+			}
+		}
 	}
 	
 	//advances world one step
 	public void step() {
 		//initialize the numLivingNbors variable to be the same size as the cells
-		int[][] numLivingNbors;
+		int[][] numLivingNbors = new int[ConwaysGameOfLife.CELLS_PER_ROW][ConwaysGameOfLife.CELLS_PER_ROW];
 		
 		//iterate through the cells and populate the numLivingNbors array with their neighbors
-		
+		for(int i = 0; i < ConwaysGameOfLife.CELLS_PER_ROW; i++) {
+			for(int j = 0; j < ConwaysGameOfLife.CELLS_PER_ROW; j++) {
+				numLivingNbors[i][j] = getLivingNeighbors(i,j);
+			}
+		}
 		
 		repaint();
 	}
@@ -74,7 +100,30 @@ public class WorldPanel extends JPanel implements MouseListener, ActionListener 
 	//cell identified by x and y
 	public int getLivingNeighbors(int x, int y){
 		int livingNeighbors = 0;
-		
+		if(cells[x+1][y+1].isAlive) {
+			livingNeighbors++;
+		}
+		if(cells[x][y+1].isAlive) {
+			livingNeighbors++;
+		}
+		if(cells[x+1][y].isAlive) {
+			livingNeighbors++;
+		}
+		if(cells[x-1][y-1].isAlive) {
+			livingNeighbors++;
+		}
+		if(cells[x-1][y].isAlive) {
+			livingNeighbors++;
+		}
+		if(cells[x][y-1].isAlive) {
+			livingNeighbors++;
+		}
+		if(cells[x+1][y-1].isAlive) {
+			livingNeighbors++;
+		}
+		if(cells[x-1][y+1].isAlive) {
+			livingNeighbors++;
+		}
 		//add 1 to livingNeighbors for each
 		//neighboring cell that is alive
 		
